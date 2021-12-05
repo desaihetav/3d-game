@@ -485,6 +485,66 @@ class JoyStick {
         });
       }
     }
+    this.initKeyboardMovementListener();
+  }
+
+  initKeyboardMovementListener = () => {
+    window.addEventListener(
+      "keydown",
+      (e) => {
+        this.keys[e.code] = e.code;
+        var keysArray = this.getStringOfKeysPressed(this.keys);
+        this.cmd = keysArray;
+        this.controller();
+      },
+      false
+    );
+
+    window.addEventListener(
+      "keyup",
+      (e) => {
+        this.keys[e.code] = false;
+        this.cmd = "STOP" + this.getStringOfKeysPressed(this.keys);
+        this.controller();
+      },
+      false
+    );
+  };
+
+  getStringOfKeysPressed(obj) {
+    const result = [];
+    for (const property in obj) {
+      if (obj[property]) {
+        result.push(obj[property]);
+      }
+    }
+    return result;
+  }
+
+  controller() {
+    const command = this.cmd.toString();
+    console.log("command received", command);
+
+    if (command.includes("ArrowUp") || command.includes("KeyW")) {
+      console.log("UP case called");
+      this.onMove && this.onMove.call(this.game, 1, 0);
+    }
+
+    if (command.includes("ArrowDown") || command.includes("KeyS")) {
+      this.onMove && this.onMove.call(this.game, -1, 0);
+    }
+
+    if (command.includes("ArrowLeft") || command.includes("KeyA")) {
+      this.onMove && this.onMove.call(this.game, 0, -1);
+    }
+
+    if (command.includes("ArrowRight") || command.includes("KeyD")) {
+      this.onMove && this.onMove.call(this.game, 0, 1);
+    }
+
+    if (command === "STOP") {
+      this.onMove && this.onMove.call(this.game, 0, 0);
+    }
   }
 
   getMousePosition(evt) {
