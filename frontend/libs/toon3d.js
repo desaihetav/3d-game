@@ -452,7 +452,7 @@ class JoyStick {
       "position:absolute; bottom:35px; width:80px; height:80px; background:rgba(126, 126, 126, 0.5); border:#444 solid medium; border-radius:50%; left:50%; transform:translateX(-50%);";
     const thumb = document.createElement("div");
     thumb.style.cssText =
-      "position: absolute; left: 20px; top: 20px; width: 40px; height: 40px; border-radius: 50%; background: #fff;";
+      "position: absolute; left: 20px; top: 20px; width: 40px; height: 40px; border-radius: 50%; background: #fff; transition: all 250ms ease";
     circle.appendChild(thumb);
     document.body.appendChild(circle);
     this.domElement = thumb;
@@ -528,28 +528,40 @@ class JoyStick {
     if (command.includes("ArrowUp") || command.includes("KeyW")) {
       console.log("UP case called");
       this.onMove && this.onMove.call(this.game, 1, 0);
+      this.domElement.style.top = "-20px";
+      this.domElement.style.left = "20px";
     }
 
     if (command.includes("ArrowDown") || command.includes("KeyS")) {
       this.onMove && this.onMove.call(this.game, -1, 0);
+      this.domElement.style.top = "60px";
+      this.domElement.style.left = "20px";
     }
 
     if (command.includes("ArrowLeft") || command.includes("KeyA")) {
       this.onMove && this.onMove.call(this.game, 0, -1);
+      this.domElement.style.top = "20px";
+      this.domElement.style.left = "-20px";
     }
 
     if (command.includes("ArrowRight") || command.includes("KeyD")) {
       this.onMove && this.onMove.call(this.game, 0, 1);
+      this.domElement.style.top = "20px";
+      this.domElement.style.left = "60px";
     }
 
     if (command === "STOP") {
       this.onMove && this.onMove.call(this.game, 0, 0);
+      this.domElement.style.top = "20px";
+      this.domElement.style.left = "20px";
     }
   }
 
   getMousePosition(evt) {
     let clientX = evt.targetTouches ? evt.targetTouches[0].pageX : evt.clientX;
     let clientY = evt.targetTouches ? evt.targetTouches[0].pageY : evt.clientY;
+    const a = { x: clientX, y: clientY };
+    console.log("a", a);
     return { x: clientX, y: clientY };
   }
 
